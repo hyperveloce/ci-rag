@@ -4,7 +4,7 @@
     Open your terminal and navigate to the root directory of your repository where your `docker-compose.yaml` file is located:
 
     ```bash
-    cd /path/to/your/repository
+    cd ci-rag
     ```
 
     *(Replace `/path/to/your/repository` with the actual path to your repository.)*
@@ -19,23 +19,20 @@
     This command will build your `rag_app` image (if necessary) and start all services defined in `docker-compose.yaml` in the background.
 
 3.  **Verify Container Status:**
-    Wait a few moments for the containers to start. You can check their status by running:
+    Check status health:
 
     ```bash
     docker ps
     ```
 
-    Ensure that your `rag_app` and vector database (e.g., `qdrant_instance`) containers are listed with a status of "Up".
-
 4.  **Send a `curl` Request for Verification:**
-    Assuming your RAG application exposes an HTTP endpoint at `/query` on port `8000`, use the following `curl` command to send a test query:
+    Use the following `curl` command to send a test query:
 
     ```bash
     curl -X POST -H "Content-Type: application/json" -d '{"query": "What information is available about the document?"}' http://localhost:8000/query
     ```
 
     **Important:**
-    * Adjust the port (`8000`) if your `rag_app` service exposes a different port in your `docker-compose.yaml`.
     * Modify the query (`"What information is available about the document?"`) to be relevant to the data you intend to process with your RAG system.
     * Adjust the endpoint (`/query`) if your application uses a different API path for queries.
 
