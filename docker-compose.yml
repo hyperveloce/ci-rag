@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  rag_app:
+    build: .
+    volumes:
+      - ./your_data:/app/data # Mount any local data your app needs
+    environment:
+      QDRANT_HOST: qdrant_instance # Or the actual hostname/IP if different
+      QDRANT_PORT: 6333
+      OLLAMA_BASE_URL: http://host.docker.internal:11434 # Access host machine from Docker
+    depends_on:
+      - qdrant_instance
+    ports:
+      - "8000:8000" # If your app exposes a web interface
+
+  qdrant_instance:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+volumes:
+  qdrant_data:
+  your_data:
