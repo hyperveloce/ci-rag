@@ -1,26 +1,25 @@
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import Qdrant
+from qdrant_client import QdrantClient, models
 import os
-import requests
 
-ollama_base_url = os.environ.get("OLLAMA_BASE_URL")
+PERSIST_DIRECTORY = "./qdrant_db"
 
-def query_ollama(prompt):
-    if not ollama_base_url:
-        raise ValueError("OLLAMA_BASE_URL environment variable not set.")
-    url = f"{ollama_base_url}/api/generate"
-    data = {
-        "prompt": prompt,
-        "stream": False  # Set to True for streaming responses
-    }
-    try:
-        response = requests.post(url, json=data)
-        response.raise_for_status()  # Raise an exception for bad status codes
-        return response.json().get("response", "")
-    except requests.exceptions.RequestException as e:
-        print(f"Error communicating with Ollama: {e}")
-        return ""
+def initialize_vector_store():
+    embeddings_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    client = QdrantClient(path=PERSIST_DIRECTORY)
 
-def query_llm_with_rag(query, context):
-    prompt = f"Answer the question based on the following context:\n\n{context}\n\nQuestion: {query}"
-    return query_ollama(prompt)
+    # Load the test data file
+    loader = TextLoader("test_data.txt")
+    documents = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    chunks = text_splitter.split_documents(documents)
 
-# ... rest of your RAG application logic ...
+    vector_store = Qdrant.from_documents(
+        chunks, embeddings_model, path=PERSIST_DIRECTORY, collection_name="my_documents"
+    )
+    return vector_store
+
+# ... rest of your RAG application using initialize_vector_store() ...

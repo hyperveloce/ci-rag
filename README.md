@@ -29,7 +29,7 @@
     Use the following `curl` command to send a test query:
 
     ```bash
-    curl -X POST -H "Content-Type: application/json" -d '{"query": "What information is available about the document?"}' http://localhost:8000/query
+    curl -X POST -H "Content-Type: application/json" -d '{"query": "What is the capital of Australia?"}' http://localhost:8000/query
     ```
 
     **Important:**
