@@ -1,17 +1,24 @@
 version: "3.8"
 services:
   rag_app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - ./rag_data:/app/data
+      - ./test_data.txt:/app/test_data.txt
     environment:
       QDRANT_HOST: qdrant_instance
       QDRANT_PORT: 6333
-      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: llama3.1
+      PYTHONUNBUFFERED: 1
     depends_on:
       - qdrant_instance
     ports:
       - "8000:8000"
+    networks:
+      - app_network
 
   qdrant_instance:
     image: qdrant/qdrant:latest
@@ -19,6 +26,12 @@ services:
       - "6333:6333"
     volumes:
       - ./test_data/qdrant:/qdrant/storage # Mount test data for testing
+    networks:
+      - app_network
 
 volumes:
   rag_data:
+
+networks:
+  app_network:
+    driver: bridge

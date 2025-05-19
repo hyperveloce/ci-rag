@@ -1,0 +1,9 @@
+langchain
+llama-index
+sentence-transformers
+qdrant-client
+requests
+langchain-community
+flask
+langchain-text-splitters  # Add this line
+langchain-huggingface
