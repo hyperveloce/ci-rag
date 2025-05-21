@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: rag_app
     volumes:
       - ./rag_data:/app/data
       - ./test_data.txt:/app/test_data.txt
@@ -20,8 +21,9 @@ services:
     networks:
       - app_network
 
-  qdrant_instance:
+  qdrant:
     image: qdrant/qdrant:latest
+    container_name: qdrant
     ports:
       - "6333:6333"
     volumes:
