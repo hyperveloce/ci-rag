@@ -15,7 +15,7 @@ services:
       OLLAMA_MODEL: llama3.1
       PYTHONUNBUFFERED: 1
     depends_on:
-      - qdrant_instance
+      - qdrant
     ports:
       - "8000:8000"
     networks:
